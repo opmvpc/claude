@@ -6,6 +6,11 @@ export interface Conversation {
 
 export interface Message {
   id: string;
-  type: "text" | "image";
-  content: string;
+  role: "assistant" | "user";
+  content: [
+    {
+      type: "text";
+      text?: string;
+    }
+  ];
 }

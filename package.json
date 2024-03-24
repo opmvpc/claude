@@ -9,11 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@kinde-oss/kinde-auth-nextjs": "^2.2.0",
     "@nextui-org/react": "^2.2.10",
     "framer-motion": "^11.0.20",
     "next": "14.1.4",
     "react": "^18",
     "react-dom": "^18",
+    "remixicon": "^4.2.0",
     "unstorage": "^1.10.2",
     "uuid": "^9.0.1"
   },
