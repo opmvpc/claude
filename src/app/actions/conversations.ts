@@ -7,7 +7,7 @@ import { Conversation, Message } from "../types";
 import { redirect } from "next/navigation";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 
-export async function createConversation() {
+export async function createConversation(formData: FormData) {
   isAuth();
 
   const storage = createStorage({
@@ -22,6 +22,8 @@ export async function createConversation() {
   };
 
   await storage.setItem("conversations:" + id, conversation);
+
+  await addMessage(id, formData);
 
   redirect("/conversations/" + conversation.id);
 }
@@ -44,7 +46,7 @@ export async function getConversations() {
   return conversations;
 }
 
-export async function getConversation(id: string) {
+export async function getConversation(id: string): Promise<Conversation> {
   isAuth();
 
   const storage = createStorage({
@@ -54,7 +56,10 @@ export async function getConversation(id: string) {
   return (await storage.getItem("conversations:" + id)) as Conversation;
 }
 
-export async function addMessage(conversationId: string, formData: FormData) {
+export async function addMessage(
+  conversationId: string,
+  formData: FormData
+): Promise<Message> {
   isAuth();
 
   const storage = createStorage({
@@ -82,6 +87,8 @@ export async function addMessage(conversationId: string, formData: FormData) {
   conversation.messages.push(message);
 
   await storage.setItem("conversations:" + conversationId, conversation);
+
+  return message;
 }
 
 const isAuth = async () => {
@@ -91,3 +98,15 @@ const isAuth = async () => {
     throw new Error("Not authenticated");
   }
 };
+
+export async function deleteConversation(conversationId: string) {
+  isAuth();
+
+  const storage = createStorage({
+    driver: fsDriver({ base: "./storage" }),
+  });
+
+  await storage.removeItem("conversations:" + conversationId);
+
+  redirect("/conversations");
+}

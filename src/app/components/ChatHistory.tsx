@@ -1,12 +1,8 @@
-import { Conversation } from "../types";
+import { Message } from "../types";
 import { Spinner } from "@nextui-org/react";
 
-export default function ChatHistory({
-  conversation,
-}: {
-  conversation: Conversation;
-}) {
-  if (!conversation) {
+export default function ChatHistory({ messages }: { messages: Message[] }) {
+  if (!messages) {
     return (
       <div>
         <Spinner />
@@ -18,8 +14,8 @@ export default function ChatHistory({
     <div className="flex-grow flex flex-col">
       <h1>Chat History</h1>
       <ul>
-        {conversation.messages?.map((message) => (
-          <li key={message.id}>
+        {messages?.map((message, index) => (
+          <li key={`message-${index}`}>
             <div>
               {message.content.map((content, index) => {
                 if (content.type === "text") {

@@ -1,19 +1,15 @@
-"use client";
-import { Button, Tooltip } from "@nextui-org/react";
-import { createConversation } from "../actions/conversations";
+import { Button, Link } from "@nextui-org/react";
 
 export default function NewConversationButton() {
   return (
-    <Tooltip content="Nouvelle conversation">
-      <Button
-        isIconOnly
-        aria-label="Nouvelle conversation"
-        onClick={async () => {
-          await createConversation();
-        }}
-      >
-        <i className="ri-edit-box-line text-lg"></i>
-      </Button>
-    </Tooltip>
+    <Button
+      href="/conversations"
+      as={Link}
+      isIconOnly
+      aria-label="Nouvelle conversation"
+      title="Nouvelle conversation"
+    >
+      <i className="ri-edit-box-line text-lg"></i>
+    </Button>
   );
 }

@@ -9,7 +9,7 @@ export default async function Page() {
   const { isAuthenticated } = getKindeServerSession();
 
   if (await isAuthenticated()) {
-    redirect("/");
+    redirect("/conversations");
   }
 
   return (
