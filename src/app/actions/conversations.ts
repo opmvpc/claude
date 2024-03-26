@@ -6,6 +6,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Conversation, Message } from "../types";
 import { redirect } from "next/navigation";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
+import { revalidatePath } from "next/cache";
 
 export async function createConversation(formData: FormData) {
   isAuth();
@@ -87,6 +88,8 @@ export async function addMessage(
   conversation.messages.push(message);
 
   await storage.setItem("conversations:" + conversationId, conversation);
+
+  revalidatePath("/conversations/" + conversationId);
 
   return message;
 }
