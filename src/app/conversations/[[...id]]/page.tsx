@@ -1,5 +1,9 @@
-import { getConversation } from "@/app/actions/conversations";
+import {
+  createConversation,
+  getConversation,
+} from "@/app/actions/conversations";
 import { ChatBox } from "@/app/components/ChatBox";
+import { Conversation, Message } from "@/app/types";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 
@@ -12,9 +16,12 @@ export default async function Page({ params }: { params: { id: string } }) {
     );
   }
 
-  let conversation = null;
+  let conversation: Conversation | null = null;
   if (params.id) {
     conversation = await getConversation(params.id);
+  } else {
+    conversation = await createConversation();
+    redirect(`/conversations/${conversation.id}`);
   }
 
   return (

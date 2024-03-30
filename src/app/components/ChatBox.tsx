@@ -3,9 +3,8 @@
 import { Textarea } from "@nextui-org/react";
 import ChatHistory from "./ChatHistory";
 import { Message } from "../types";
-import { addMessage, createConversation } from "@/app/actions/conversations";
 import SendButton from "./SendButton";
-import { useOptimistic, useRef, useState } from "react";
+import { useChat } from "ai/react";
 
 export function ChatBox({
   conversationId,
@@ -14,44 +13,21 @@ export function ChatBox({
   conversationId?: string;
   history?: Message[];
 }) {
-  const formRef = useRef<HTMLFormElement>(null);
+  console.log("ChatBox", conversationId, history);
 
-  const [messages, setMessages] = useState(history ?? []);
-
-  const [optimisticMessages, addOptimisticMessage] = useOptimistic<
-    Message[],
-    string
-  >(messages, (state, newMessage) => [
-    ...state,
-    { id: "0", role: "user", content: [{ type: "text", text: newMessage }] },
-  ]);
+  const { messages, input, handleInputChange, handleSubmit } = useChat({
+    id: conversationId,
+    initialMessages: history ?? [],
+    body: {
+      conversationId: conversationId,
+    },
+  });
 
   return (
     <div className="flex flex-col  h-full">
-      <ChatHistory messages={optimisticMessages} />
+      <ChatHistory messages={messages} />
       <form
-        action={async (formData: FormData) => {
-          const message = (formData.get("message") ?? "") as string;
-          addOptimisticMessage(message);
-          if (!conversationId) {
-            await createConversation(formData);
-            return;
-          }
-          const addMessageToConversation = addMessage.bind(
-            null,
-            conversationId
-          );
-          const sentMessage = await addMessageToConversation(formData);
-          setMessages([...messages, sentMessage]);
-          const textarea = document.querySelector(
-            "textarea[name=message]"
-          ) as HTMLTextAreaElement;
-          if (textarea) {
-            textarea.focus();
-          }
-          formRef.current?.reset();
-        }}
-        ref={formRef}
+        onSubmit={handleSubmit}
         className="flex items-center space-x-4 p-4 bg-zinc-900"
       >
         <Textarea
@@ -59,6 +35,8 @@ export function ChatBox({
           placeholder="Ask something to Claude"
           className=""
           name="message"
+          value={input}
+          onChange={handleInputChange}
         />
         <div>
           <SendButton />

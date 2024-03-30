@@ -1,16 +1,17 @@
 export interface Conversation {
   id: string;
   name: string;
-  messages: Message[];
+  messages?: Message[];
 }
 
 export interface Message {
   id: string;
-  role: "assistant" | "user";
-  content: [
-    {
-      type: "text";
-      text?: string;
-    }
-  ];
+  role: "assistant" | "user" | "system" | "tool" | "data" | "function";
+  content: string;
+}
+
+export interface User {
+  id: string;
+  email: string;
+  conversations: string[];
 }

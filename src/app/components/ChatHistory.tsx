@@ -16,15 +16,7 @@ export default function ChatHistory({ messages }: { messages: Message[] }) {
       <ul>
         {messages?.map((message, index) => (
           <li key={`message-${index}`}>
-            <div>
-              {message.content.map((content, index) => {
-                if (content.type === "text") {
-                  return <div key={`content-${index}`}>{content.text}</div>;
-                }
-
-                return null;
-              })}
-            </div>
+            <div>{message.content}</div>
           </li>
         ))}
       </ul>
