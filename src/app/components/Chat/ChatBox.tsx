@@ -13,8 +13,6 @@ export default function ChatBox({
   conversationId?: string;
   history?: Message[];
 }) {
-  console.log("ChatBox", conversationId, history);
-
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     id: conversationId,
     initialMessages: history ?? [],
