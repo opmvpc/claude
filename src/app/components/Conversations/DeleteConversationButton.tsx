@@ -9,7 +9,7 @@ import {
   Button,
   useDisclosure,
 } from "@nextui-org/react";
-import { deleteConversation } from "../actions/conversations";
+import { deleteConversation } from "../../actions/conversations";
 
 export default function DeleteConversationButton({
   conversationId,

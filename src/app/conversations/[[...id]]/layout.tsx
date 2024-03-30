@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import ConversationList from "../../components/ConversationList";
-import UserCard from "../../components/UserCard";
+import ConversationList from "../../components/Conversations/ConversationList";
+import UserCard from "../../components/User/UserCard";
 import { getConversations } from "../../actions/conversations";
 
 export const metadata: Metadata = {
@@ -19,7 +19,7 @@ export default async function RootLayout({
   const currentConversationId = params.id ? params.id.join("") : undefined;
 
   return (
-    <main className=" min-h-screen flex ">
+    <main className=" h-screen flex ">
       <div className="w-52 bg-zinc-950 flex flex-col">
         <ConversationList
           conversations={conversations}

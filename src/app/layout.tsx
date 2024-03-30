@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import "remixicon/fonts/remixicon.css";
 import { Providers } from "./providers";
-import ConversationList from "./components/ConversationList";
+import ConversationList from "./components/Conversations/ConversationList";
 
 const inter = Inter({ subsets: ["latin"] });
 

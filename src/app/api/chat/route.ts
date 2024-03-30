@@ -51,9 +51,6 @@ async function addMessage(
     `conversations:${conversationId}`
   )) as Conversation;
 
-  console.log(conversation);
-  console.log(messageContent);
-
   const message: Message = {
     id: uuidv4(),
     role: role,

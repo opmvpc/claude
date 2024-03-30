@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import NewConversationButton from "./newConversationButton";
-import { Conversation } from "../types";
+import { Conversation } from "../../types";
 import DeleteConversationButton from "./DeleteConversationButton";
 
 export default async function ConversationList({

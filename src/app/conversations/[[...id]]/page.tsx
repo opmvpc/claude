@@ -2,7 +2,7 @@ import {
   createConversation,
   getConversation,
 } from "@/app/actions/conversations";
-import { ChatBox } from "@/app/components/ChatBox";
+import ChatBox from "@/app/components/Chat/ChatBox";
 import { Conversation, Message } from "@/app/types";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
