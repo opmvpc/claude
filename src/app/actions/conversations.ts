@@ -2,48 +2,43 @@
 
 import { storage } from "../../storage";
 import { v4 as uuidv4 } from "uuid";
-import { Conversation, User } from "../../types";
+import { Conversation, Messages, User } from "../../types";
 import { redirect } from "next/navigation";
-import { revalidatePath } from "next/cache";
 import { getUser, isAuth } from "@/auth";
 
-export async function createConversation(): Promise<Conversation> {
+export async function createConversation(): Promise<{
+  id: string;
+  name: string;
+}> {
   isAuth();
 
   const id = uuidv4();
-  const conversation = {
-    id,
-    name: "Nouvelle conversation",
+  const message = {
     messages: [],
   };
 
-  let users = (await storage.getItem("users")) as User[];
-  if (users === null) {
-    // create users storage
-    users = [];
-    await storage.setItem("users", users);
-  }
+  const conversation = {
+    id,
+    name: "Nouvelle conversation",
+  };
 
-  const user = await getUser();
-  const currentUser = users.find((u) => u.id === user.id);
+  const kindeUser = await getUser();
 
-  if (currentUser === undefined) {
+  let user = (await storage.getItem(`users:${kindeUser.id}`)) as User;
+  if (user === null) {
     // Add user to storage
-    users.push({
-      id: user.id,
-      email: user.email ?? "no-email",
-      conversations: [id],
-    });
-  } else {
-    // Update user
-    currentUser.conversations.push(id);
+    user = {
+      id: kindeUser.id,
+      email: kindeUser.email ?? "no-email",
+      conversations: [],
+    };
   }
 
-  await storage.setItem("users", users);
+  user.conversations.push(conversation);
 
-  await storage.setItem(`conversations:${id}`, conversation);
+  await storage.setItem(`users:${kindeUser.id}`, user);
 
-  revalidatePath("/conversations");
+  await storage.setItem(`conversations:${id}`, message);
 
   return conversation;
 }
@@ -51,37 +46,20 @@ export async function createConversation(): Promise<Conversation> {
 export async function getConversations() {
   await isAuth();
 
-  const user = await getUser();
-  const users = (await storage.getItem("users")) as User[];
-  if (users === null) {
+  const kindeUser = await getUser();
+
+  const user = (await storage.getItem(`users:${kindeUser.id}`)) as User;
+  if (user === undefined) {
     return [];
   }
 
-  const currentUser = users.find((u) => u.id === user.id);
-  if (currentUser === undefined) {
-    return [];
-  }
-
-  const keys = currentUser.conversations.map((id) => `conversations:${id}`);
-  let conversations = await Promise.all(
-    keys.map(async (key: string) => {
-      const conversation = (await storage.getItem(key)) as Conversation;
-      return conversation;
-    })
-  );
-
-  return conversations.map((conversation) => {
-    return {
-      id: conversation.id,
-      name: conversation.name,
-    };
-  });
+  return user.conversations;
 }
 
-export async function getConversation(id: string): Promise<Conversation> {
+export async function getMessages(id: string): Promise<Messages> {
   await isAuth();
 
-  return (await storage.getItem(`conversations:${id}`)) as Conversation;
+  return (await storage.getItem(`conversations:${id}`)) as Messages;
 }
 
 export async function deleteConversation(conversationId: string) {
@@ -89,22 +67,21 @@ export async function deleteConversation(conversationId: string) {
 
   await storage.removeItem(`conversations:${conversationId}`);
 
-  const user = await getUser();
-  const users = (await storage.getItem("users")) as User[];
-  const currentUser = users.find((u) => u.id === user.id);
-  if (currentUser === undefined) {
+  const kindeUser = await getUser();
+
+  let user = (await storage.getItem(`users:${kindeUser.id}`)) as User;
+  if (user === null) {
     return;
   }
 
-  const index = currentUser.conversations.indexOf(conversationId);
-  if (index > -1) {
-    currentUser.conversations.splice(index, 1);
-  }
+  user.conversations = user.conversations.filter(
+    (conversation) => conversation.id !== conversationId
+  );
 
-  await storage.setItem("users", users);
+  await storage.setItem(`users:${kindeUser.id}`, user);
 
-  if (currentUser.conversations.length > 0) {
-    redirect(`/conversations/${currentUser.conversations[0]}`);
+  if (user.conversations.length > 0) {
+    redirect(`/conversations/${user.conversations[0].id}`);
   } else {
     redirect("/conversations");
   }

@@ -1,7 +1,6 @@
 export interface Conversation {
   id: string;
   name: string;
-  messages?: Message[];
 }
 
 export interface Message {
@@ -10,8 +9,12 @@ export interface Message {
   content: string;
 }
 
+export interface Messages {
+  messages: Message[];
+}
+
 export interface User {
   id: string;
   email: string;
-  conversations: string[];
+  conversations: Conversation[];
 }

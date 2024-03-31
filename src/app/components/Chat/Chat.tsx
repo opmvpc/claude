@@ -1,5 +1,5 @@
-import { Message } from "../../../types";
-import { getConversation } from "@/app/actions/conversations";
+import { Messages } from "../../../types";
+import { getMessages } from "@/app/actions/conversations";
 import ChatBox from "./ChatBox";
 
 export default async function Chat({
@@ -7,8 +7,9 @@ export default async function Chat({
 }: {
   conversationId: string;
 }) {
-  const history: Message[] =
-    (await getConversation(conversationId)).messages ?? [];
+  const history: Messages = (await getMessages(conversationId)) ?? {
+    messages: [],
+  };
 
   return (
     <div className="flex flex-col h-full">

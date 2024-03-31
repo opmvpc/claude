@@ -2,7 +2,7 @@
 
 import { Textarea } from "@nextui-org/react";
 import ChatHistory from "./ChatHistory";
-import { Message } from "../../../types";
+import { Message, Messages } from "../../../types";
 import SendButton from "./SendButton";
 import { useChat } from "ai/react";
 
@@ -11,11 +11,11 @@ export default function ChatBox({
   history,
 }: {
   conversationId: string;
-  history: Message[];
+  history: Messages;
 }) {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     id: conversationId,
-    initialMessages: history,
+    initialMessages: history.messages,
     body: {
       conversationId: conversationId,
     },

@@ -1,4 +1,4 @@
-import { Conversation, Message } from "@/types";
+import { Conversation, Message, Messages } from "@/types";
 import Anthropic from "@anthropic-ai/sdk";
 import { AnthropicStream, StreamingTextResponse } from "ai";
 import { revalidatePath } from "next/cache";
@@ -45,7 +45,7 @@ async function addMessage(
 ): Promise<Message> {
   const conversation = (await storage.getItem(
     `conversations:${conversationId}`
-  )) as Conversation;
+  )) as Messages;
 
   const message: Message = {
     id: uuidv4(),
