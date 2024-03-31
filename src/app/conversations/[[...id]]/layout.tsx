@@ -29,7 +29,9 @@ export default async function RootLayout({
             </Link>
             <NewConversationButton />
           </div>
-          <ConversationList currentConversationId={currentConversationId} />
+          <ConversationList
+            currentConversationId={currentConversationId ?? ""}
+          />
         </div>
         <Suspense fallback={<div>Loading...</div>}>
           <UserCard />
