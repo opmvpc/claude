@@ -10,19 +10,19 @@ export default function ChatBox({
   conversationId,
   history,
 }: {
-  conversationId?: string;
-  history?: Message[];
+  conversationId: string;
+  history: Message[];
 }) {
   const { messages, input, handleInputChange, handleSubmit } = useChat({
     id: conversationId,
-    initialMessages: history ?? [],
+    initialMessages: history,
     body: {
       conversationId: conversationId,
     },
   });
 
   return (
-    <div className="flex flex-col  h-full">
+    <>
       <ChatHistory messages={messages} />
       <form
         onSubmit={handleSubmit}
@@ -40,6 +40,6 @@ export default function ChatBox({
           <SendButton />
         </div>
       </form>
-    </div>
+    </>
   );
 }

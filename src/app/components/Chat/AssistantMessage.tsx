@@ -1,6 +1,6 @@
-export default function AssistantMessage({ message }: { message: string }) {
+export default function AssistantMessage({ message }: { message?: string }) {
   function setObj() {
-    return { __html: message };
+    return { __html: message ?? "" };
   }
 
   const obj = setObj();
