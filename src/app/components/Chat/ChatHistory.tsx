@@ -25,11 +25,13 @@ export default function ChatHistory({ messages }: { messages: Message[] }) {
       <ul className="flex flex-col space-y-8">
         {messages?.map((message, index) => (
           <Fragment key={`message-${index}`}>
-            {message.role === "assistant" ? (
-              <AssistantMessage message={md.render(message.content) ?? ""} />
-            ) : (
-              <UserMessage message={md.render(message.content) ?? ""} />
-            )}
+            <Suspense fallback={<div>Loading...</div>}>
+              {message.role === "assistant" ? (
+                <AssistantMessage md={md} message={message} />
+              ) : (
+                <UserMessage md={md} message={message} />
+              )}
+            </Suspense>
           </Fragment>
         ))}
       </ul>
