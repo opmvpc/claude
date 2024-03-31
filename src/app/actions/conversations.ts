@@ -1,12 +1,11 @@
 "use server";
 
-import { storage } from "../storage";
+import { storage } from "../../storage";
 import { v4 as uuidv4 } from "uuid";
-import { Conversation, Message, User } from "../types";
+import { Conversation, User } from "../../types";
 import { redirect } from "next/navigation";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { revalidatePath } from "next/cache";
-import { KindeUser } from "@kinde-oss/kinde-auth-nextjs/dist/types";
+import { getUser, isAuth } from "@/auth";
 
 export async function createConversation(): Promise<Conversation> {
   isAuth();
@@ -50,7 +49,7 @@ export async function createConversation(): Promise<Conversation> {
 }
 
 export async function getConversations() {
-  isAuth();
+  await isAuth();
 
   const user = await getUser();
   const users = (await storage.getItem("users")) as User[];
@@ -80,21 +79,13 @@ export async function getConversations() {
 }
 
 export async function getConversation(id: string): Promise<Conversation> {
-  isAuth();
+  await isAuth();
 
   return (await storage.getItem(`conversations:${id}`)) as Conversation;
 }
 
-const isAuth = async () => {
-  const { isAuthenticated } = getKindeServerSession();
-
-  if (!(await isAuthenticated())) {
-    throw new Error("Not authenticated");
-  }
-};
-
 export async function deleteConversation(conversationId: string) {
-  isAuth();
+  await isAuth();
 
   await storage.removeItem(`conversations:${conversationId}`);
 
@@ -117,14 +108,4 @@ export async function deleteConversation(conversationId: string) {
   } else {
     redirect("/conversations");
   }
-}
-
-async function getUser(): Promise<KindeUser> {
-  const { getUser } = getKindeServerSession();
-  const user = await getUser();
-  if (user === null) {
-    throw new Error("User not found");
-  }
-
-  return user;
 }

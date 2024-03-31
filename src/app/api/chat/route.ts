@@ -1,10 +1,10 @@
-import { Conversation, Message } from "@/app/types";
+import { Conversation, Message } from "@/types";
 import Anthropic from "@anthropic-ai/sdk";
-import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { AnthropicStream, StreamingTextResponse } from "ai";
 import { revalidatePath } from "next/cache";
 import { v4 as uuidv4 } from "uuid";
-import { storage } from "../../storage";
+import { storage } from "../../../storage";
+import { isAuth } from "@/auth";
 
 const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY || "",
@@ -14,11 +14,7 @@ const anthropic = new Anthropic({
 export const runtime = "edge";
 
 export async function POST(req: Request) {
-  const { isAuthenticated } = getKindeServerSession();
-
-  if (!(await isAuthenticated())) {
-    throw new Error("Not authenticated");
-  }
+  await isAuth();
 
   const { messages, conversationId } = await req.json();
 

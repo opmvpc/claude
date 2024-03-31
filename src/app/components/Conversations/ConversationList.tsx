@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Conversation } from "../../types";
+import { Conversation } from "../../../types";
 import DeleteConversationButton from "./DeleteConversationButton";
 import { getConversations } from "@/app/actions/conversations";
 import ConversationLink from "./ConversationLink";

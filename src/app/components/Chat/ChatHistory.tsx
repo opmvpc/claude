@@ -1,6 +1,6 @@
 "use client";
 
-import { Message } from "../../types";
+import { Message } from "../../../types";
 import AssistantMessage from "./AssistantMessage";
 import UserMessage from "./UserMessage";
 import { Fragment, Suspense, useEffect, useRef } from "react";

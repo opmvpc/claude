@@ -1,4 +1,4 @@
-import { Message } from "../../types";
+import { Message } from "../../../types";
 import { getConversation } from "@/app/actions/conversations";
 import ChatBox from "./ChatBox";
 

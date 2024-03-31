@@ -1,6 +1,6 @@
 import { createConversation } from "@/app/actions/conversations";
 import Chat from "@/app/components/Chat/Chat";
-import { Conversation } from "@/app/types";
+import { Conversation } from "@/types";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";

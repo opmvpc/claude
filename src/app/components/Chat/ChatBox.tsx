@@ -2,7 +2,7 @@
 
 import { Textarea } from "@nextui-org/react";
 import ChatHistory from "./ChatHistory";
-import { Message } from "../../types";
+import { Message } from "../../../types";
 import SendButton from "./SendButton";
 import { useChat } from "ai/react";
 
