@@ -5,6 +5,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Conversation, Messages, User } from "../../types";
 import { redirect } from "next/navigation";
 import { getUser, isAuth } from "@/auth";
+import { revalidatePath } from "next/cache";
 
 export async function createConversation(): Promise<{
   id: string;
@@ -39,6 +40,8 @@ export async function createConversation(): Promise<{
   await storage.setItem(`users:${kindeUser.id}`, user);
 
   await storage.setItem(`conversations:${id}`, message);
+
+  revalidatePath(`/conversations`);
 
   return conversation;
 }
